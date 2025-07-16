@@ -1,0 +1,57 @@
++-----------------------------+        +-----------------------------+        +-----------------------------+       +------------------+
+|         IFoodItem           |        |           IPayment          |        |    IDiscountCalculator       |      | IDeliveryAssigner|
+|         <<interface>>       |        |           <<interface>>     |        |       <<interface>>          |      |  <<interface>>   |  
++-----------------------------+        +-----------------------------+        +-----------------------------+       +------------------------------+
+| + getId(): int              |        | + getPayment(): double      |        | + calculateDiscount(): double|      | + assign():DeliveryPartner   |
+| + getName(): String         |        +-----------------------------+        +-----------------------------+       +------------------------------+
+| + getCuisineType(): String  |                   ▲                                        ▲                                    ▲
+| + getPrice(): double        |                   |                                        |                                    |
++-----------------------------+              +---------------+                       +------------------------+                 |
+         ▲                                   |   UpiPayment  |                       |     FlatDiscount       |                 |
+         |                                   +---------------+                       +------------------------+                 |
+         |                                   |   CashPayment |                                                                |
+         |                                   +---------------+                                                                |
++-----------------------------+                                                                                               |
+|         FoodItem            |                                                                                               |
++-----------------------------+                                                                                               |
+                                                                                                                              |
++-----------------------------+        +-----------------------------+        +------------------------------+                |
+|           Menu              |        |            Order            |        |       DeliveryManager        |----------------+
++-----------------------------+        +-----------------------------+        +------------------------------+
+| - items: List<IFoodItem>    |◄───────| - items: List<OrderItem>    |        | - partners: List             |
+|                             |        |                             |        | - assigner: IDeliveryAssigner|
+| + addItem(item)             |        | + addItem(item, qty)        |        | + addPartner(partner)        |---------+
+| + removeItem(itemId)        |        | + getTotalAmount(): double  |        | + getRandomPartner(): DeliveryPartner  |
+| + displayMenu()             |        +-----------------------------+        |  (extensible to assign by diff methods)|
+|                             |                                               +--------------------------------------- +
++-----------------------------+                       |
+                                                      |                          |
+                                                      ▼                          |
+                                           +-----------------------------+       |
+                                           |         OrderItem           |       |
+                                           +-----------------------------+       |
+                                           | - item: IFoodItem           |       |
+                                           | - quantity: int             |       |
+                                           | + getTotalPrice(): double   |       |
+                                           +-----------------------------+       |
+                                                                                 |
+                                                                                 ▼  
+                                                         +-----------------------------+
+                                                         |      DeliveryPartner        |
+                                                         +-----------------------------+
+                                                         | - id: int                   |
+                                                         | - name: String              |
+                                                         | - phone: String             |
+                                                         +-----------------------------+
+
+
++-----------------------------+                  +-----------------------------+
+|           Admin             |                  |      FoodOrderingApp        |
++-----------------------------+                  +-----------------------------+
+| - orderHistory: List        |                  | + main(): void              |
+|                             |                  | - showAdminPanel(): void    |
+| + addFoodItem()             |                  | - handleCustomer(): void    |
+| + addDeliveryPartner()      |                  |                             |
+| + recordOrder()             |                  |   // Main Controller        |
+| + viewAllOrders()           |                  +-----------------------------+
++-----------------------------+
